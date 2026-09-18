@@ -96,25 +96,27 @@ pytest tests/test_api.py
 
 | Target Class | Precision | Recall | F1-Score | Support |
 | :--- | :---: | :---: | :---: | :---: |
-| **Paid** | 0.880 | 0.875 | 0.877 | 56 |
-| **Partially_Paid** | 0.583 | 0.438 | 0.500 | 16 |
-| **Denied** | 0.500 | 0.750 | 0.600 | 8 |
-| **Macro Avg** | **0.654** | **0.688** | **0.659** | 80 |
-| **Weighted Avg** | **0.783** | **0.775** | **0.774** | 80 |
+| **Denied** | 0.000 | 0.000 | 0.000 | 11 |
+| **Paid** | 0.634 | 0.900 | 0.744 | 50 |
+| **Partially_Paid** | 0.429 | 0.158 | 0.231 | 19 |
+| **Accuracy** | | | **0.600** | 80 |
+| **Macro Avg** | **0.354** | **0.353** | **0.325** | 80 |
+| **Weighted Avg** | **0.498** | **0.600** | **0.520** | 80 |
 
 ### Confusion Matrix
 ```
 Predicted  --->    Denied  Paid  Partially_Paid
-Actual Denied [      6      1        1        ]
-Actual Paid   [      4     49        3        ]
-Actual Part   [      2      7        7        ]
+Actual Denied [      0     11        0        ]
+Actual Paid   [      1     45        4        ]
+Actual Part   [      1     15        3        ]
 ```
 
 ### Analysis of Weakest Class & Concrete Improvement Ideas
-- **Weakest Class**: The model achieves lower F1-scores on `Partially_Paid` (0.500) and precision on `Denied` (0.500). Because `Partially_Paid` sits on a spectrum between full payment and complete rejection, its feature boundaries overlap heavily with `Paid` claims in routine CPT billing categories.
+- **Weakest Class**: The model is weakest at the **`Denied`** class (Precision: 0.000, Recall: 0.000, F1: 0.000). Because `Denied` is a severe minority class (~10-13% of total data), a standard classifier defaults to predicting `Paid` (74.4% F1) to maximize overall accuracy without catching the rare denial patterns.
 - **Concrete Improvement Strategy**:
-  1. **Synthetic Oversampling (SMOTE-NC)**: Apply SMOTE for nominal and continuous features on training data to synthesize minority class instances (`Denied` and `Partially_Paid`) before classifier fitting.
-  2. **Domain Feature Expansion**: Introduce historical authorization submission flags (`has_prior_auth`), clinical diagnosis severity index, and provider-payer historical contract allowance ratios.
+  1. **SMOTE-NC Oversampling**: Apply Synthetic Minority Over-sampling Technique (SMOTE) specifically on the training set to generate synthetic `Denied` claims before model training.
+  2. **Cost-Sensitive Learning / Class Weight Tuning**: Increase the penalty weight for `Denied` class errors (e.g. `class_weight={'Denied': 10, 'Partially_Paid': 3, 'Paid': 1}`).
+  3. **Feature Addition**: Include historical prior-authorization flags, specific diagnosis-code denial histories, and out-of-network provider indicators.
 
 ---
 

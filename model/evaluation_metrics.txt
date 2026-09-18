@@ -1,0 +1,18 @@
+=== ML Model Evaluation Report ===
+
+Classification Report:
+                precision    recall  f1-score   support
+
+        Denied      0.000     0.000     0.000        11
+          Paid      0.634     0.900     0.744        50
+Partially_Paid      0.429     0.158     0.231        19
+
+      accuracy                          0.600        80
+     macro avg      0.354     0.353     0.325        80
+  weighted avg      0.498     0.600     0.520        80
+
+Confusion Matrix:
+Classes: ['Denied', 'Paid', 'Partially_Paid']
+[[ 0 11  0]
+ [ 1 45  4]
+ [ 1 15  3]]

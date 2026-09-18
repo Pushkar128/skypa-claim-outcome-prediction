@@ -1,7 +1,12 @@
 import os
+import sys
 import joblib
 import pandas as pd
 import numpy as np
+
+# Ensure root directory is in sys.path when running script directly
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from sklearn.model_selection import train_test_split
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
