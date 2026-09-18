@@ -4,6 +4,7 @@ import pandas as pd
 from fastapi import FastAPI, HTTPException, status
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field, validator
 from typing import Dict, Optional
 
@@ -13,6 +14,15 @@ app = FastAPI(
     title="Claim Outcome Prediction API",
     description="Production API predicting insurance claim outcomes (Paid, Partially_Paid, Denied) and retrieving appeal guidance.",
     version="1.0.0"
+)
+
+# Enable CORS for all origins
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 MODEL_PATH = os.path.join('model', 'claim_pipeline.joblib')
