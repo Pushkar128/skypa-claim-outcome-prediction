@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.env
+venv/
+env/
+.idea/
+.vscode/
+*.joblib
+!model/claim_pipeline.joblib
